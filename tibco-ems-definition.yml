@@ -1,0 +1,13 @@
+name: com.newrelic.tibco.ems
+description: Reports status and metrics for tibco ems service
+protocol_version: 2
+os: linux
+
+commands:
+  metrics:
+    command:
+      - java
+      - -jar
+      - /var/db/newrelic-infra/custom-integrations/bin/tibco-ems.jar 
+    prefix: integration/tibco_ems
+    interval: 60

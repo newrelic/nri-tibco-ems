@@ -1,0 +1,62 @@
+plugins {
+    id 'java'
+	id 'eclipse'
+}
+
+group = 'com.newrelic.nri'
+version = '1.0'
+
+repositories {
+	mavenCentral()
+	maven {
+        url "http://maven.icm.edu.pl/artifactory/repo/"
+    }
+    flatDir {
+        dirs 'lib'
+    }
+}
+
+configurations {
+    provided
+    compile.extendsFrom provided
+}
+
+dependencies {
+    // This dependency is used by the application.
+    implementation 'com.google.guava:guava:28.0-jre'
+    
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.6.7.1'
+    
+	// https://mvnrepository.com/artifact/com.tibco/tibjms
+	//did not work
+	//compile group: 'com.tibco', name: 'tibjms', version: '4.4.3'
+
+	// https://mvnrepository.com/artifact/javax.jms/javax.jms-api
+	compile group: 'javax.jms', name: 'javax.jms-api', version: '2.0.1'
+	
+	// https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
+	compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+	
+	compile group: 'com.beust', name: 'jcommander', version: '1.72'
+	
+    provided fileTree(dir: 'lib', includes: ['*.jar'])
+        
+    // Use JUnit test framework
+    testImplementation 'junit:junit:4.12'
+}
+
+task allInOneJar(type: Jar) {
+	manifest {
+			attributes 'Implementation-Title': project.group + '.' + project.name,
+			'Implementation-Vendor-Id': 'New Relic Field Services',
+			'Implementation-Version': version,
+			"Main-Class": "com.newrelic.nri.tibco.ems.Main"
+	}
+	archiveName 'tibco-ems.jar'
+	destinationDir = file("$distsDir")
+	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	with jar
+}
+
+jar.enabled=false
+assemble.dependsOn "allInOneJar"

@@ -1,69 +1,55 @@
-[![New Relic Experimental header](https://github.com/newrelic/opensource-website/raw/master/src/images/categories/Experimental.png)](https://opensource.newrelic.com/oss-category/#new-relic-experimental)
 
-![GitHub forks](https://img.shields.io/github/forks/newrelic-experimental/nri-tibco-ems?style=social)
-![GitHub stars](https://img.shields.io/github/stars/newrelic-experimental/nri-tibco-ems?style=social)
-![GitHub watchers](https://img.shields.io/github/watchers/newrelic-experimental/nri-tibco-ems?style=social)
+# New Relic Infrastructure Integration for Tibco EMS
 
-![GitHub all releases](https://img.shields.io/github/downloads/newrelic-experimental/nri-tibco-ems/total)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/newrelic-experimental/nri-tibco-ems)
-![GitHub last commit](https://img.shields.io/github/last-commit/newrelic-experimental/nri-tibco-ems)
-![GitHub Release Date](https://img.shields.io/github/release-date/newrelic-experimental/nri-tibco-ems)
+Reports status and metrics for Tibco EMS server
 
+## Disclaimer
 
-![GitHub issues](https://img.shields.io/github/issues/newrelic-experimental/nri-tibco-ems)
-![GitHub issues closed](https://img.shields.io/github/issues-closed/newrelic-experimental/nri-tibco-ems)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/newrelic-experimental/nri-tibco-ems)
-![GitHub pull requests closed](https://img.shields.io/github/issues-pr-closed/newrelic-experimental/nri-tibco-ems)
+New Relic has open-sourced this integration to enable monitoring of this technology. This integration is provided AS-IS WITHOUT WARRANTY OR SUPPORT, although you can report issues and contribute to this integration via GitHub. Support for this integration is available with an [Expert Services subscription](https://newrelic.com/expertservices).
 
-# [Project Name] [build badges go here when available]
+## Requirements
 
->[Brief description - what is the project and value does it provide? How often should users expect to get releases? How is versioning set up? Where does this project want to go?]
+ - New Relic Infrastructure Agent
 
 ## Installation
 
-> [Include a step-by-step procedure on how to get your code installed. Be sure to include any third-party dependencies that need to be installed separately]
+Install the Tibco EMS monitoring plugin
 
-## Getting Started
+```sh
 
->[Simple steps to start working with the software similar to a "Hello World"]
+cp -R bin /var/db/newrelic-infra/custom-integrations/
+
+cp tibco-ems-definition.yml /var/db/newrelic-infra/custom-integrations/
+
+cp tibco-ems-config.yml.sample /etc/newrelic-infra/integrations.d/
+
+cp plugin.json /etc/newrelic-infra/integrations.d/
+
+```
+
+## Configuration
+
+In order to use the `tibco-ems` integration it is required to configure tibco-ems-config.yml.sample file. Firstly, rename the file to tibco-ems-config.yml (that is, drop the .sample extension to enable this integration).
+
+Edit the *tibco-ems-config.yml* configuration file to ensure that *config_file* argument points to the correct path of *plugin.json* file.
+
+Then edit *plugin.json* file to edit the tibco server connection information. 
+
+Finally verify that the path to *tibco-ems.jar* in the *tibco-ems-definition.yml* file.
+
+Restart the infrastructure agent
+
+```sh
+sudo systemctl stop newrelic-infra
+
+sudo systemctl start newrelic-infra
+```
 
 ## Usage
 
->[**Optional** - Include more thorough instructions on how to use the software. This section might not be needed if the Getting Started section is enough. Remove this section if it's not needed.]
+You can view your data in Insights by creating your own custom NRQL queries. To
+do so use **EMS**.. event types.
 
-## Building
+## Compatibility
 
->[**Optional** - Include this section if users will need to follow specific instructions to build the software from source. Be sure to include any third party build dependencies that need to be installed separately. Remove this section if it's not needed.]
-
-## Testing
-
->[**Optional** - Include instructions on how to run tests if we include tests with the codebase. Remove this section if it's not needed.]
-
-## Support
-
-New Relic has open-sourced this project. This project is provided AS-IS WITHOUT WARRANTY OR DEDICATED SUPPORT. Issues and contributions should be reported to the project here on GitHub.
-
->[Choose 1 of the 2 options below for Support details, and remove the other one.]
-
->[Option 1 - no specific thread in Community]
->We encourage you to bring your experiences and questions to the [Explorers Hub](https://discuss.newrelic.com) where our community members collaborate on solutions and new ideas.
-
->[Option 2 - thread in Community]
->New Relic hosts and moderates an online forum where customers can interact with New Relic employees as well as other customers to get help and share best practices. Like all official New Relic open source projects, there's a related Community topic in the New Relic Explorers Hub.
->You can find this project's topic/threads here: [URL for Community thread]
-
-## Contributing
-
-We encourage your contributions to improve [Project Name]! Keep in mind when you submit your pull request, you'll need to sign the CLA via the click-through using CLA-Assistant. You only have to sign the CLA one time per project. If you have any questions, or to execute our corporate CLA, required if your contribution is on behalf of a company, please drop us an email at opensource@newrelic.com.
-
-**A note about vulnerabilities**
-
-As noted in our [security policy](../../security/policy), New Relic is committed to the privacy and security of our customers and their data. We believe that providing coordinated disclosure by security researchers and engaging with the security community are important means to achieve our security goals.
-
-If you believe you have found a security vulnerability in this project or any of New Relic's products or websites, we welcome and greatly appreciate you reporting it to New Relic through [HackerOne](https://hackerone.com/newrelic).
-
-## License
-
-[Project Name] is licensed under the [Apache 2.0](http://apache.org/licenses/LICENSE-2.0.txt) License.
-
->[If applicable: [Project Name] also uses source code from third-party libraries. You can find full details on which libraries are used and the terms under which they are licensed in the third-party notices document.]
+* Supported OS: Linux
