@@ -13,6 +13,20 @@ New Relic has open-sourced this integration to enable monitoring of this technol
 
 ## Installation
 
+1. Extract the Release archive to the local disk
+2. Either run the install script or follow the instructions below for manual installation.
+
+### By Script
+
+As the root user, run the following command:
+
+```sh
+
+./install.sh
+```
+
+### Manual
+
 Install the Tibco EMS monitoring plugin
 
 ```sh
@@ -23,17 +37,30 @@ cp tibco-ems-definition.yml /var/db/newrelic-infra/custom-integrations/
 
 cp tibco-ems-config.yml.sample /etc/newrelic-infra/integrations.d/
 
-cp plugin.json /etc/newrelic-infra/integrations.d/
+cp tibco-ems-server-config.json /etc/newrelic-infra/integrations.d/
 
 ```
 
 ## Configuration
 
-In order to use the `tibco-ems` integration it is required to configure tibco-ems-config.yml.sample file. Firstly, rename the file to tibco-ems-config.yml (that is, drop the .sample extension to enable this integration).
 
-Edit the *tibco-ems-config.yml* configuration file to ensure that *config_file* argument points to the correct path of *plugin.json* file.
 
-Then edit *plugin.json* file to edit the tibco server connection information. 
+Edit *tibco-ems-server-config.json* file to edit the tibco server(s) connection information. 
+   
+    
+| Attribute | Description |
+| --- | --- |
+| name | Name describing the EMS Server |
+| host | DNS name of IP of the EMS Server |
+| port | port number of EMS Server, typically 7222 |
+| username | username for connecting |
+| password | (optional) provide password for user if needed |
+| includeDynamicQueues | flag (true, false) to indicate whether to collect temporary queues |
+| queueIgnores | JSON Array of JSON Object pair "qIgnoreRegEx" and a regular expression to match against queue names |
+| includeDynamicTopics | flag (true, false) to indicate whether to collect temporary topics |
+| topicIgnores | JSON Array of JSON Object pair "tIgnoreRegEx" and a regular expression to match against topic names |
+
+
 
 Finally verify that the path to *tibco-ems.jar* in the *tibco-ems-definition.yml* file.
 
