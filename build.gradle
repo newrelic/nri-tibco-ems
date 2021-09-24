@@ -1,6 +1,7 @@
 plugins {
     id 'java'
 	id 'eclipse'
+	id 'distribution'
 }
 
 group = 'com.newrelic.nri'
@@ -19,6 +20,18 @@ repositories {
 configurations {
     provided
     compile.extendsFrom provided
+}
+
+distributions {
+	main {
+		baseName = 'tibco-ems'
+		contents {
+			from  {
+				'build/archive'
+			}
+			
+		}
+	}
 }
 
 dependencies {
@@ -45,6 +58,15 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 }
 
+task copyNRIFiles(dependsOn: 'allInOneJar', type: Copy) {
+	from 'config'
+	from('build/distributions') {
+		include '*.jar'
+	}
+	from 'scripts'
+	into 'build/archive'
+}
+
 task allInOneJar(type: Jar) {
 	manifest {
 			attributes 'Implementation-Title': project.group + '.' + project.name,
@@ -60,3 +82,5 @@ task allInOneJar(type: Jar) {
 
 jar.enabled=false
 assemble.dependsOn "allInOneJar"
+distTar.dependsOn "copyNRIFiles"
+distZip.dependsOn "copyNRIFiles"
