@@ -4,7 +4,7 @@ instances:
     - name: ems-server-metrics
       command: metrics
       arguments:
-        config_file: /etc/newrelic-infra/integrations.d/plugin.json
+        config_file: /etc/newrelic-infra/integrations.d/tibco-ems-server-config.json
       labels:
         env: production
         role: ems-server

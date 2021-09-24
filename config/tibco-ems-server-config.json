@@ -2,13 +2,14 @@
 	"instances": [
 		{
     	   "name": "EMS-SERVER",
-    	   "host": "34.229.202.212",
+    	   "host": "localhost",
     	   "port": 7222,
     	   "username": "admin",
     	   "includeDynamicQueues": true,
     	   "queueIgnores": 
     	   	[
-    	   		{"qIgnoreRegEx":"TMP.*"}
+    	   		{"qIgnoreRegEx":"TMP.*"},
+    	   		{"qIgnoreRegEx":"SYS.*"}
     	   	],
     	   "includeDynamicTopics": true,
     	   "topicIgnores": 

@@ -8,6 +8,6 @@ commands:
     command:
       - java
       - -jar
-      - /var/db/newrelic-infra/custom-integrations/bin/tibco-ems.jar 
+      - /var/db/newrelic-infra/custom-integrations/tibco-ems.jar 
     prefix: integration/tibco_ems
     interval: 60
