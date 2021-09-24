@@ -37,14 +37,27 @@ public class EMSMonitorFactory {
 		}
 
 		ems.setFlagIncludeDynamicTopics((Boolean) properties.get("includeDynamicTopics"));
-		/*
-		 * JSONArray tIgnores = (JSONArray) properties.get("topicIgnores"); if (tIgnores
-		 * != null) { for (int i = 0; i < tIgnores.size(); i++) { JSONObject regex =
-		 * (JSONObject)qIgnores.get(i); if(regex != null) { String val = (String)
-		 * regex.get("tIgnoreRegEx"); if(val != null && !val.isEmpty()) {
-		 * ems.addToTopicIgnores(val); } } } }
-		 */
+		
+		ArrayList<Object> tIgnores = (ArrayList<Object>) properties.get("topicIgnores");
+		 if (tIgnores != null) {
+			 for(int k =0; k < tIgnores.size(); k++) {
+				 LinkedHashMap<String, String> regex = (LinkedHashMap<String, String>) qIgnores.get(k);
+					if (regex != null) {
+						String val = (String) regex.get("qIgnoreRegEx");
+						if (val != null && !val.isEmpty()) {
+							ems.addToTopicIgnores(val);
+						}
+					}				 
+			 }
+		 }
+		
 		EMSMonitor agent = new EMSMonitor(ems);
+		
+		Object obj = properties.get("channeldetails");
+		if(obj != null && obj instanceof Boolean) {
+			Boolean getDetails = (Boolean)obj;
+			agent.setCollectDetails(getDetails);
+		}
 
 		return agent;
 	}

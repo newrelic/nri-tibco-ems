@@ -25,6 +25,10 @@ public class EMSMonitor  {
 	private static final String SYS = "SYS";
 	private boolean collectDetails = true;
 	
+	public void setCollectDetails(boolean collectDetails) {
+		this.collectDetails = collectDetails;
+	}
+
 	private TibjmsAdmin connect(EMSServer m)  {
 		TibjmsAdmin tibcoInst = null;
 		
