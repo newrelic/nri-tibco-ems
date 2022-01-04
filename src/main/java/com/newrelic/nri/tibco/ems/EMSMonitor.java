@@ -5,16 +5,21 @@ import java.util.List;
 
 import com.tibco.tibjms.admin.BridgeInfo;
 import com.tibco.tibjms.admin.ChannelInfo;
+// import com.tibco.tibjms.admin.ConnectionInfo;
 import com.tibco.tibjms.admin.DetailedDestStat;
 import com.tibco.tibjms.admin.QueueInfo;
 import com.tibco.tibjms.admin.RouteInfo;
+import com.tibco.tibjms.admin.ServerInfo;
 import com.tibco.tibjms.admin.StatData;
+import com.tibco.tibjms.admin.State;
 import com.tibco.tibjms.admin.TibjmsAdmin;
 import com.tibco.tibjms.admin.TibjmsAdminException;
 import com.tibco.tibjms.admin.TopicInfo;
 
+
 import com.newrelic.nri.tibco.ems.metrics.*;
 
+@SuppressWarnings("deprecation")
 public class EMSMonitor  {
 	
 	private EMSServer emsServer;
@@ -25,29 +30,19 @@ public class EMSMonitor  {
 	private static final String SYS = "SYS";
 	private boolean collectDetails = true;
 	
-	public void setCollectDetails(boolean collectDetails) {
-		this.collectDetails = collectDetails;
-	}
-
 	private TibjmsAdmin connect(EMSServer m)  {
 		TibjmsAdmin tibcoInst = null;
-		
-		if (m.isValid()) {
-			String user = m.getUsername();
-			String host = m.getEMSURL();
-			String password = m.getPassword();
-			try {
-				tibcoInst = new TibjmsAdmin(host, user, password);
-			} catch (TibjmsAdminException e) {
-				String eString = e.toString();
-				if(eString.contains("authentication failed")) {
-					m.setValid(false);
-					Utils.reportError("Authentication Error while trying to connect to "+host+" using username "+user+", please verify that the credentials are correct");
-				} else {
-					Utils.reportError("Failed to connect", e);
-				}
-			} 
+		String user = m.getUsername();
+		String host = m.getEMSURL();
+		String password = m.getPassword();
+
+		try {
+			tibcoInst = new TibjmsAdmin(host, user, password);
 		}
+		catch (TibjmsAdminException e) {
+			Utils.reportError("Failed to connect",e);
+		}
+
 		return tibcoInst;
 	}
 
@@ -58,11 +53,23 @@ public class EMSMonitor  {
 	public void populateMetrics(JSONMetricReporter metricReporter) throws Exception {
 		TibjmsAdmin tibjmsServer = connect(emsServer);
 		if (tibjmsServer != null) {
-			getChannelStats(tibjmsServer, metricReporter);
-			getBridgeStats(tibjmsServer, metricReporter);
-			getQueueStats(tibjmsServer, metricReporter);
-			getTopicStats(tibjmsServer, metricReporter);
-			getRouteStats(tibjmsServer, metricReporter);
+				State serverState = tibjmsServer.getStateInfo().getState();
+				if( serverState.get() == State.SERVER_STATE_ACTIVE || serverState.get() == State.SERVER_STATE_ACTIVE_REPLICATING  ) {
+				getServerInfo(tibjmsServer, metricReporter);
+				getChannelStats(tibjmsServer, metricReporter);
+				getBridgeStats(tibjmsServer, metricReporter);
+				getQueueStats(tibjmsServer, metricReporter);
+				getTopicStats(tibjmsServer, metricReporter);
+				getRouteStats(tibjmsServer, metricReporter);
+			} else {
+			    // Report server status only
+                // getServerInfo(tibjmsServer, metricReporter);
+                String emsServerName = emsServer.getName().trim();
+                List<Metric> metricList = new ArrayList<Metric>();
+                metricList.add(new AttributeMetric("EMS Server", emsServerName));
+                metricList.add(new AttributeMetric("Server State", serverState.toString()));
+                metricReporter.report("Server Metrics",StatType.Server, metricList);
+			}
 			tibjmsServer.close();
 		} else {
 			Utils.reportError("Not connected to "+emsServer.getName());
@@ -493,6 +500,41 @@ public class EMSMonitor  {
 				metricList.add(new AttributeMetric("EMS Server", emsServerName));
 				metricReporter.report("Route Totals",StatType.RouteTotals, metricList);
 			}
+
+		} catch (TibjmsAdminException e) {
+			Utils.reportError("TibJMSAdminException occurred",e);
+		} 
+
+	}
+	protected void getServerInfo(TibjmsAdmin tibjmsServer, JSONMetricReporter metricReporter) {
+		try {
+
+			String emsServerName = emsServer.getName().trim();
+			ServerInfo getInfo = tibjmsServer.getInfo();
+
+			if (getInfo != null) 
+				{
+					List<Metric> metricList = new ArrayList<Metric>();
+    				State serverState = tibjmsServer.getStateInfo().getState();
+
+					metricList.add(new AttributeMetric("Server State", serverState.toString()));
+
+					int pid = getInfo.getProcessId();
+					metricList.add(new AttributeMetric("Process ID", pid));
+
+					int connCount = getInfo.getConnectionCount();
+					metricList.add(new AttributeMetric("Connection Count", connCount));
+
+					long totalMsgMemory = getInfo.getMsgMem();
+					metricList.add(new AttributeMetric("Total Message Memory", totalMsgMemory));
+
+					long maxMsgMemory = getInfo.getMaxMsgMemory();
+					metricList.add(new AttributeMetric("Max Message Memory", maxMsgMemory));
+
+					metricList.add(new AttributeMetric("EMS Server", emsServerName));
+
+					metricReporter.report("Route Metrics",StatType.Server, metricList);
+				}
 
 		} catch (TibjmsAdminException e) {
 			Utils.reportError("TibJMSAdminException occurred",e);

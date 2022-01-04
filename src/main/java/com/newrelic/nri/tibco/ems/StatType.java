@@ -31,7 +31,13 @@ public enum StatType {
             return "EMSTopic";
         }
 	}, 
-	ChannelDetails {
+    Server {
+        @Override
+        public String getEventType() {
+            return "EMSServer";
+        }
+	}, 
+    ChannelDetails {
         @Override
         public String getEventType() {
             return "EMSChannelDetails";
