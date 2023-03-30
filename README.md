@@ -11,6 +11,12 @@ New Relic has open-sourced this integration to enable monitoring of this technol
 
  - New Relic Infrastructure Agent
 
+## Using Tibco Mangled Passwords
+  
+In order to encrypt the password of the user connecting to EMS, you need to run the included utility to mangle the password.  Then place the encrypted password in the password field and include the encryptPassword field with a value of true.   
+  
+In the extracted release directory run the passwordSetup.sh script with the password to use.  It will output the mangled password to use in tibco-ems-server-config.json.  
+   
 ## Configuration
 
 Edit *tibco-ems-server-config.json* file to edit the tibco server(s) connection information. 
@@ -23,6 +29,7 @@ Edit *tibco-ems-server-config.json* file to edit the tibco server(s) connection 
 | port | port number of EMS Server, typically 7222 |
 | username | username for connecting |
 | password | (optional) provide password for user if needed |
+| encryptPassword | (optional) set to true if password is mangled (encrypted), default is false |
 | includeDynamicQueues | flag (true, false) to indicate whether to collect temporary queues |
 | queueIgnores | JSON Array of JSON Object pair "qIgnoreRegEx" and a regular expression to match against queue names |
 | includeDynamicTopics | flag (true, false) to indicate whether to collect temporary topics |
