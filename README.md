@@ -1,19 +1,19 @@
-<a href="https://opensource.newrelic.com/oss-category/#new-relic-experimental"><picture><source media="(prefers-color-scheme: dark)" srcset="https://github.com/newrelic/opensource-website/raw/main/src/images/categories/dark/Experimental.png"><source media="(prefers-color-scheme: light)" srcset="https://github.com/newrelic/opensource-website/raw/main/src/images/categories/Experimental.png"><img alt="New Relic Open Source experimental project banner." src="https://github.com/newrelic/opensource-website/raw/main/src/images/categories/Experimental.png"></picture></a>
+<a href="https://opensource.newrelic.com/oss-category/#community-project"><picture><source media="(prefers-color-scheme: dark)" srcset="https://github.com/newrelic/opensource-website/raw/main/src/images/categories/dark/Community_Project.png"><source media="(prefers-color-scheme: light)" srcset="https://github.com/newrelic/opensource-website/raw/main/src/images/categories/Community_Project.png"><img alt="New Relic Open Source community project banner." src="https://github.com/newrelic/opensource-website/raw/main/src/images/categories/Community_Project.png"></picture></a>
 
-![GitHub forks](https://img.shields.io/github/forks/newrelic-experimental/nri-tibco-ems?style=social)
-![GitHub stars](https://img.shields.io/github/stars/newrelic-experimental/nri-tibco-ems?style=social)
-![GitHub watchers](https://img.shields.io/github/watchers/newrelic-experimental/nri-tibco-ems?style=social)
+![GitHub forks](https://img.shields.io/github/forks/newrelic/nri-tibco-ems?style=social)
+![GitHub stars](https://img.shields.io/github/stars/newrelic/nri-tibco-ems?style=social)
+![GitHub watchers](https://img.shields.io/github/watchers/newrelic/nri-tibco-ems?style=social)
 
-![GitHub all releases](https://img.shields.io/github/downloads/newrelic-experimental/nri-tibco-ems/total)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/newrelic-experimental/nri-tibco-ems)
-![GitHub last commit](https://img.shields.io/github/last-commit/newrelic-experimental/nri-tibco-ems)
-![GitHub Release Date](https://img.shields.io/github/release-date/newrelic-experimental/nri-tibco-ems)
+![GitHub all releases](https://img.shields.io/github/downloads/newrelic/nri-tibco-ems/total)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/newrelic/nri-tibco-ems)
+![GitHub last commit](https://img.shields.io/github/last-commit/newrelic/nri-tibco-ems)
+![GitHub Release Date](https://img.shields.io/github/release-date/newrelic/nri-tibco-ems)
 
 
-![GitHub issues](https://img.shields.io/github/issues/newrelic-experimental/nri-tibco-ems)
-![GitHub issues closed](https://img.shields.io/github/issues-closed/newrelic-experimental/nri-tibco-ems)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/newrelic-experimental/nri-tibco-ems)
-![GitHub pull requests closed](https://img.shields.io/github/issues-pr-closed/newrelic-experimental/nri-tibco-ems)   
+![GitHub issues](https://img.shields.io/github/issues/newrelic/nri-tibco-ems)
+![GitHub issues closed](https://img.shields.io/github/issues-closed/newrelic/nri-tibco-ems)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/newrelic/nri-tibco-ems)
+![GitHub pull requests closed](https://img.shields.io/github/issues-pr-closed/newrelic/nri-tibco-ems)   
 # New Relic Infrastructure Integration for Tibco EMS
 
 Reports status and metrics for Tibco EMS server
