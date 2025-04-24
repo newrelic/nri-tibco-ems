@@ -56,7 +56,7 @@ Edit *tibco-ems-server-config.json* file to edit the tibco server(s) connection 
 | name | Name describing the EMS Server |
 | host | DNS name of IP of the EMS Server |
 | port | port number of EMS Server, typically 7222 |
-| protocol | (optional) set to tcp or ssl depending if port is tcp or ssl.  default is tcp. |
+| protocol | (optional) set to tcp or ssl depending if port is tcp or ssl. Must be set to ssl if connecting via SSL.  default is tcp. |
 | username | username for connecting |
 | password | (optional) provide password for user if needed |
 | encryptPassword | (optional) set to true if password is mangled (encrypted), default is false |
