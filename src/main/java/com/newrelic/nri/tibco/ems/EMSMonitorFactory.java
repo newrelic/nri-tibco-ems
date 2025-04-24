@@ -1,6 +1,7 @@
 package com.newrelic.nri.tibco.ems;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.io.UnsupportedEncodingException;
@@ -26,6 +27,8 @@ public class EMSMonitorFactory {
 		String username = (String) properties.get("username");
 		String password = (String) properties.get("password");
 		Boolean encryptPassword = (Boolean) properties.get("encryptPassword");
+		String protocol = ((String) properties.getOrDefault("protocol", "tcp")).toLowerCase();
+		
 
 		if (encryptPassword != null && encryptPassword) {
 			try {
@@ -38,8 +41,14 @@ public class EMSMonitorFactory {
 			encryptPassword = false;
 			}
 
-		EMSServer ems = new EMSServer(name, host, port.intValue(), username, password);
+		EMSServer ems = new EMSServer(name, host, port.intValue(), username, password, protocol);
 
+		if(protocol.equalsIgnoreCase("ssl")) {
+			SSLConfig sslConfig = (SSLConfig) properties.get("sslConfig");
+			
+			
+		}
+		
 		ems.setFlagIncludeDynamicQueues((Boolean) properties.get("includeDynamicQueues"));
 
 		ArrayList<Object> qIgnores = (ArrayList<Object>) properties.get("queueIgnores");
@@ -55,6 +64,7 @@ public class EMSMonitorFactory {
 				}
 			}
 		}
+		
 
 		ems.setFlagIncludeDynamicTopics((Boolean) properties.get("includeDynamicTopics"));
 		/*

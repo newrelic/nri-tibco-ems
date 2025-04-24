@@ -6,6 +6,7 @@ import java.io.Reader;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,8 @@ import org.json.simple.JSONObject;
 import com.beust.jcommander.JCommander;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.newrelic.nri.tibco.ems.metrics.AttributeMetric;
+import com.newrelic.nri.tibco.ems.metrics.Metric;
 
 public class Main {
 	
@@ -90,6 +93,71 @@ public class Main {
 			//String msg = "plugin.json 'global' configuration entry must be an map with keys of type string";
 			//throw new Exception(msg);
 		}
+		
+		Object mappingsObject = pluginConfigProperties.get("eventmappings");
+		if(mappingsObject != null) {
+			if(mappingsObject instanceof LinkedHashMap) {
+				LinkedHashMap<Object,Object> mappings = (LinkedHashMap<Object,Object>)mappingsObject;
+				Object value = mappings.get("Channel");
+				if(value != null) {
+					EventMappings.setEventMapping("Channel", value.toString());
+				}
+				value = mappings.get("ChannelDetails");
+				if(value != null) {
+					EventMappings.setEventMapping("ChannelDetails", value.toString());
+				}
+				value = mappings.get("Bridge");
+				if(value != null) {
+					EventMappings.setEventMapping("Bridge", value.toString());
+				}
+				value = mappings.get("Queue");
+				if(value != null) {
+					EventMappings.setEventMapping("Queue", value.toString());
+				}
+				value = mappings.get("Route");
+				if(value != null) {
+					EventMappings.setEventMapping("Route", value.toString());
+				}
+				value = mappings.get("Server");
+				if(value != null) {
+					EventMappings.setEventMapping("Server", value.toString());
+				}
+				value = mappings.get("Topic");
+				if(value != null) {
+					EventMappings.setEventMapping("Topic", value.toString());
+				}
+				value = mappings.get("QueueTotals");
+				if(value != null) {
+					EventMappings.setEventMapping("QueueTotals", value.toString());
+				}
+				value = mappings.get("QueueTotals");
+				if(value != null) {
+					EventMappings.setEventMapping("QueueTotals", value.toString());
+				}
+				value = mappings.get("TopicTotals");
+				if(value != null) {
+					EventMappings.setEventMapping("TopicTotals", value.toString());
+				}
+				value = mappings.get("RouteTotals");
+				if(value != null) {
+					EventMappings.setEventMapping("RouteTotals", value.toString());
+				}
+				JSONMetricReporter mappingReporter = new JSONMetricReporter();
+				List<Metric> metricList = new ArrayList<>();
+				Map<String,String> eMappings = EventMappings.getMappings();
+				for(String key : eMappings.keySet()) {
+					String map_value = eMappings.get(key);
+					if(map_value != null && !map_value.isEmpty()) {
+						Metric metric = new AttributeMetric(key, map_value);
+						metricList.add(metric);
+					}
+				}
+				mappingReporter.report("EventMappings", StatType.EventMapping, metricList);
+				System.out.println(mappingReporter.getJSON().toString());
+
+			}
+		}
+		
 
 		Object agentsObj = pluginConfigProperties.get("instances");
 		if (agentsObj == null) {
