@@ -16,6 +16,7 @@ import java.util.List;
 
 public class EMSServer {
 	private String host;
+	private String protocol;
 	private int port = 7222;
 	private String username;
 	private String password;
@@ -25,8 +26,18 @@ public class EMSServer {
 	private Boolean flagIncludeDynamicQueues;
 	private Boolean flagIncludeDynamicTopics;
 	private boolean valid = true;
+	private boolean isSSL = false;
 	
+	
+	public boolean isSSL() {
+		return isSSL;
+	}
+
 	public EMSServer(String name, String host, int port, String username, String password) {
+		this(name,host,port,username,password,"tcp");
+	}
+	
+	public EMSServer(String name, String host, int port, String username, String password, String protocol) {
 		super();
 		this.name = name;
 		this.host = host;
@@ -35,8 +46,9 @@ public class EMSServer {
 		this.password = password;
 		queueIgnores = new ArrayList<String>();
 		topicIgnores = new ArrayList<String>();
+		this.protocol = protocol;
+		isSSL = protocol.contains("ssl");
 	}
-	
 	public boolean isValid() {
 		return valid;
 	}
@@ -57,7 +69,7 @@ public class EMSServer {
 	}
 	public String getEMSURL() {
 		String emsURL = null;
-		emsURL = "tcp://" + host + ":" + port;
+		emsURL = protocol + "://" + host + ":" + port;
 		return(emsURL);
 	}
 	
@@ -107,5 +119,6 @@ public class EMSServer {
 	public Boolean getFlagIncludeDynamicTopics() {
 		return flagIncludeDynamicTopics;
 	}
+
 	
 }

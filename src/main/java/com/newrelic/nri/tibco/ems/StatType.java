@@ -1,64 +1,70 @@
 package com.newrelic.nri.tibco.ems;
 
 public enum StatType {
+	EventMapping {
+        @Override
+        public String getEventType() {
+            return "EventMapping";
+        }
+	},
 	Channel {
         @Override
         public String getEventType() {
-            return "EMSChannel";
+            return EventMappings.getEventMapping("Channel");
         }
 	}, 
 	Bridge {
         @Override
         public String getEventType() {
-            return "EMSBridge";
+            return EventMappings.getEventMapping("Bridge");
         }
 	}, 
 	Queue {
         @Override
         public String getEventType() {
-            return "EMSQueue";
+            return EventMappings.getEventMapping("Queue");
         }
 	}, 
 	Route {
         @Override
         public String getEventType() {
-            return "EMSRoute";
+            return EventMappings.getEventMapping("Route");
         }
 	}, 
 	Topic {
         @Override
         public String getEventType() {
-            return "EMSTopic";
+            return EventMappings.getEventMapping("Topic");
         }
 	}, 
     Server {
         @Override
         public String getEventType() {
-            return "EMSServer";
+            return EventMappings.getEventMapping("Server");
         }
 	}, 
     ChannelDetails {
         @Override
         public String getEventType() {
-            return "EMSChannelDetails";
+            return EventMappings.getEventMapping("ChannelDetails");
         }
 	}, 
 	QueueTotals {
         @Override
         public String getEventType() {
-            return "EMSQueueTotals";
+            return EventMappings.getEventMapping("QueueTotals");
         }
 	}, 
 	TopicTotals {
         @Override
         public String getEventType() {
-            return "EMSTopicTotals";
+            return EventMappings.getEventMapping("TopicTotals");
         }
 	}, 
 	RouteTotals {
         @Override
         public String getEventType() {
-            return "EMSRouteTotals";
+            return EventMappings.getEventMapping("RouteTotals");
         }
 	};
 	

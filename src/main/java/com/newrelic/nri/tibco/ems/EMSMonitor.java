@@ -1,7 +1,10 @@
 package com.newrelic.nri.tibco.ems;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Properties;
+import java.util.Vector;
 
 import com.tibco.tibjms.admin.BridgeInfo;
 import com.tibco.tibjms.admin.ChannelInfo;
@@ -23,21 +26,67 @@ import com.newrelic.nri.tibco.ems.metrics.*;
 public class EMSMonitor  {
 	
 	private EMSServer emsServer;
-//	private static final Logger logger = LoggerFactory.getLogger(EMSMonitor.class);
 	private static final String TMPSTART = "$TMP";
 	private static final String TEMP = "Temp";
 	private static final String SYSSTART = "$SYS";
 	private static final String SYS = "SYS";
 	private boolean collectDetails = true;
+	private SSLConfig sslConfig = new SSLConfig();
 	
 	private TibjmsAdmin connect(EMSServer m)  {
 		TibjmsAdmin tibcoInst = null;
 		String user = m.getUsername();
 		String host = m.getEMSURL();
+		Hashtable<String, Object> sslProperties = null;
+		if(m.isSSL()) {
+			sslProperties = new Hashtable<String, Object>();
+			
+			sslProperties.put(com.tibco.tibjms.TibjmsSSL.ENABLE_VERIFY_HOST, sslConfig.isVerifyHost());
+			sslProperties.put(com.tibco.tibjms.TibjmsSSL.ENABLE_VERIFY_HOST_NAME, sslConfig.isVerifyHostname());
+			sslProperties.put(com.tibco.tibjms.TibjmsSSL.TRACE, sslConfig.isTrace());
+			sslProperties.put(com.tibco.tibjms.TibjmsSSL.DEBUG_TRACE, sslConfig.isDebug_trace());
+			String vendor = sslConfig.getVendor();
+			if(vendor != null && !vendor.isEmpty()) {
+				sslProperties.put(com.tibco.tibjms.TibjmsSSL.VENDOR, vendor);
+			}
+			String ciphers = sslConfig.getCiphers();
+			if(ciphers != null && !ciphers.isEmpty()) {
+				sslProperties.put(com.tibco.tibjms.TibjmsSSL.CIPHERS, ciphers);
+			}
+			String expectedHost = sslConfig.getExpectedHostname();
+			if(expectedHost != null && !expectedHost.isEmpty()) {
+				sslProperties.put(com.tibco.tibjms.TibjmsSSL.EXPECTED_HOST_NAME, expectedHost);
+			}
+			Vector<String> trusted = sslConfig.getTrusted();
+			if(trusted != null && trusted.size() > 0) {
+				sslProperties.put(com.tibco.tibjms.TibjmsSSL.TRUSTED_CERTIFICATES, trusted);
+			}
+			Vector<String> issuers = sslConfig.getIssuers();
+			if(trusted != null && trusted.size() > 0) {
+				sslProperties.put(com.tibco.tibjms.TibjmsSSL.ISSUER_CERTIFICATES, issuers);
+			}
+			String privateKey = sslConfig.getPrivateKey();
+			if(privateKey != null && !privateKey.isEmpty()) {
+				sslProperties.put(com.tibco.tibjms.TibjmsSSL.PRIVATE_KEY, privateKey);
+			}
+			String identity = sslConfig.getIdentity();
+			if(identity != null && !identity.isEmpty()) {
+				sslProperties.put(com.tibco.tibjms.TibjmsSSL.IDENTITY, identity);
+			}
+			String password = sslConfig.getPassword();
+			if(password != null && !password.isEmpty()) {
+				sslProperties.put(com.tibco.tibjms.TibjmsSSL.PASSWORD, password);
+			}
+
+		}
 		String password = m.getPassword();
 
 		try {
-			tibcoInst = new TibjmsAdmin(host, user, password);
+			if(sslProperties == null) {
+				tibcoInst = new TibjmsAdmin(host, user, password);
+			} else {
+				tibcoInst = new TibjmsAdmin(host, user, password,sslProperties);
+			}
 		}
 		catch (TibjmsAdminException e) {
 			Utils.reportError("Failed to connect",e);

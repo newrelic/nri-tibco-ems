@@ -28,6 +28,24 @@ In order to encrypt the password of the user connecting to EMS, you need to run 
   
 In the extracted release directory run the passwordSetup.sh script with the password to use.  It will output the mangled password to use in tibco-ems-server-config.json.  
    
+## Usage
+
+The data collected is reported to New Relic as Custom Events.  The following is a list of events that can be reported.   An event is only recorded if data present for that item so not all events may be reported.
+   
+### Event Types
+   
+| Event Type | Description |
+| ---- | ---- |
+| **EMSQueue** | Metrics related to an EMS Queue.  Attribute "Queue Name" is the name of the queue |
+| **EMSQueueTotals** | Contains the sums of certain metrics across all recorded queues |
+| **EMSTopic** | Metrics related to an EMS Topic.  Attribute "Topic Name" is the name of the topic |
+| **EMSTopicTotals** | Contains the sums of certain metrics across all recorded topics |
+| **EMSRoute** | Metrics related to an EMS Route.  Attribute "Route Name" is the name of the route |
+| **EMSRouteTotals** | Contains the sums of certain metrics across all recorded routes |
+| **EMSChannel** | Metrics related to an EMS Channel.  Attribute "Channel Name" is the name of the channel |
+| **EMSChannelDetails** | Contains more detailed information about a channel |
+| **EMSBridge** | Metrics related to an EMS Bridge.  Attribute "Bridge Name" is the name of the bridge |
+
 ## Configuration
 
 Edit *tibco-ems-server-config.json* file to edit the tibco server(s) connection information. 
@@ -38,6 +56,7 @@ Edit *tibco-ems-server-config.json* file to edit the tibco server(s) connection 
 | name | Name describing the EMS Server |
 | host | DNS name of IP of the EMS Server |
 | port | port number of EMS Server, typically 7222 |
+| protocol | (optional) set to tcp or ssl depending if port is tcp or ssl. Must be set to ssl if connecting via SSL.  default is tcp. |
 | username | username for connecting |
 | password | (optional) provide password for user if needed |
 | encryptPassword | (optional) set to true if password is mangled (encrypted), default is false |
@@ -46,6 +65,26 @@ Edit *tibco-ems-server-config.json* file to edit the tibco server(s) connection 
 | includeDynamicTopics | flag (true, false) to indicate whether to collect temporary topics |
 | topicIgnores | JSON Array of JSON Object pair "tIgnoreRegEx" and a regular expression to match against topic names |
 | channeldetails | whether to collect channel details or not.  default is true |
+   
+### Optional Event Names   
+   
+By default, the events reported use the event name that coresponds to the event type.  If you prefer a different name for any of them you can configure it as described below.    
+
+To configure a different name for any of the events, add an eventmappings object to the configuration and provide a name value pair for the event type you would like to rename. Note that the event types are do not include EMS at the beginning.  An example is provided below and has been placed just before the instances object.    
+   
+	"eventmappings": {
+		"Channel": "MyChannel",
+		"ChannelDetails": "MyChannelDetails",
+		"Bridge": "MyBridge",
+		"Queue": "MyQueue",
+		"Route": "MyRoute",
+		"Server": "MyServer",
+		"Topic": "MyTopic",
+		"QueueTotals": "MyQueueTotals",
+		"TopicTotals": "MyTopicTotals",
+		"RouteTotals": "MyRouteTotals"		
+	},
+	"instances": [
 
 
 ### Ignoring Queues and/or Topics
@@ -93,24 +132,6 @@ cp tibco-ems-config.yml.sample /etc/newrelic-infra/integrations.d/
 cp tibco-ems-server-config.json /etc/newrelic-infra/integrations.d/
 
 ```
-
-## Usage
-
-The data collected is reported to New Relic as Custom Events.  The following is a list of events that can be reported.   An event is only recorded if data present for that item so not all events may be reported.
-   
-### Event Types
-   
-| Event Type | Description |
-| ---- | ---- |
-| **EMSQueue** | Metrics related to an EMS Queue.  Attribute "Queue Name" is the name of the queue |
-| **EMSQueueTotals** | Contains the sums of certain metrics across all recorded queues |
-| **EMSTopic** | Metrics related to an EMS Topic.  Attribute "Topic Name" is the name of the topic |
-| **EMSTopicTotals** | Contains the sums of certain metrics across all recorded topics |
-| **EMSRoute** | Metrics related to an EMS Route.  Attribute "Route Name" is the name of the route |
-| **EMSRouteTotals** | Contains the sums of certain metrics across all recorded routes |
-| **EMSChannel** | Metrics related to an EMS Channel.  Attribute "Channel Name" is the name of the channel |
-| **EMSChannelDetails** | Contains more detailed information about a channel |
-| **EMSBridge** | Metrics related to an EMS Bridge.  Attribute "Bridge Name" is the name of the bridge |
 
 ## Compatibility
 
